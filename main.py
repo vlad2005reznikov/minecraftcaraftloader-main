@@ -36,15 +36,22 @@ def bar_custom(current, total, width=80):
 
 
 # Define the window's contents
-layout = [[sg.Text("Mod loader", size=(40, 1))],
+layout1 = [[sg.Text("Mod loader", size=(40, 1))],
           [sg.Text(size=(40, 1), visible=False, key='-OUTPUT-')],
           [sg.ProgressBar(BAR_MAX, orientation='h', size=(20, 20), visible=False, key='pp')],
           [sg.Text(size=(40, 1), visible=False, key='procent')],
-          [sg.Button('Загрузить'), sg.Button('Настройки'), sg.Button('Выйти')],
+           [sg.Button('Загрузить'), sg.Button('Настройки'), sg.Button('Выйти')],
           [sg.Column(
               [[sg.Text("developed by AbobaCorp", font='Default 7', justification='right'), sg.Image("abcorp.png")]],
               justification='right', element_justification='right')]]
-
+layout2 =[
+            [sg.Text("Выберите папку установки майнкрафта")],
+            [sg.InputText([], size=(50,1), key='-FILESLB-'),
+            sg.Input(visible=False, enable_events=True, key='-IN-'), sg.FilesBrowse('Обзор')],
+            [sg.Button('Назад')]
+]
+layout = [[sg.Column(layout1, key='main'), sg.Column(layout2, visible=False, key='setings')]
+          ]
 # Create the window
 window = sg.Window('ServerName mod loader', layout, icon='logo.ico')
 
@@ -53,7 +60,11 @@ while True:
     event, values = window.read(timeout=10)
     # See if user wants to quit or window was closed
     if event == 'Настройки':
-        pass
+        window['main'].update(visible=False)
+        window['setings'].update(visible=True)
+    if event == 'Назад':
+        window['setings'].update(visible=False)
+        window['main'].update(visible=True)
     if event == sg.WINDOW_CLOSED or event == 'Выйти':
         break
     # Output a message to the window
