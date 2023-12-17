@@ -40,7 +40,7 @@ layout = [[sg.Text("Mod loader", size=(40, 1))],
           [sg.Text(size=(40, 1), visible=False, key='-OUTPUT-')],
           [sg.ProgressBar(BAR_MAX, orientation='h', size=(20, 20), visible=False, key='pp')],
           [sg.Text(size=(40, 1), visible=False, key='procent')],
-          [sg.Button('Загрузить'), sg.Button('Выйти')],
+          [sg.Button('Загрузить'), sg.Button('Настройки'), sg.Button('Выйти')],
           [sg.Column(
               [[sg.Text("developed by AbobaCorp", font='Default 7', justification='right'), sg.Image("abcorp.png")]],
               justification='right', element_justification='right')]]
@@ -52,6 +52,8 @@ window = sg.Window('ServerName mod loader', layout, icon='logo.ico')
 while True:
     event, values = window.read(timeout=10)
     # See if user wants to quit or window was closed
+    if event == 'Настройки':
+        pass
     if event == sg.WINDOW_CLOSED or event == 'Выйти':
         break
     # Output a message to the window
