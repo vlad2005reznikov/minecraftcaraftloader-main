@@ -9,8 +9,7 @@ username = (os.environ.get("USERNAME"))
 folder = 'C:/Users/' + username + '/AppData/Roaming/.minecraft/mods/'
 BAR_MAX = 100
 prp = 0
-
-
+oldfolder = '...'
 # sg.theme('black')
 def download():
     try:
@@ -34,6 +33,20 @@ def bar_custom(current, total, width=80):
     percentage = (f'{int(prp)}%')
     window['procent'].update(percentage)
 
+def newconf():
+    try:
+        os.remove('config.py')
+    except:
+        pass
+    createfile = open("config.py","w+")
+    createfile.write("oldfolder = '"+folder+"'")
+    createfile.close()
+
+try:
+    from config import oldfolder
+    folder = oldfolder
+except:
+    pass
 
 # Define the window's contents
 layout1 = [[sg.Text("Mod loader", size=(40, 1))],
@@ -46,19 +59,28 @@ layout1 = [[sg.Text("Mod loader", size=(40, 1))],
               justification='right', element_justification='right')]]
 layout2 =[
             [sg.Text("Выберите папку установки майнкрафта")],
-            [sg.InputText([], size=(50,1), key='-FILESLB-'),
-            sg.Input(visible=False, enable_events=True, key='-IN-'), sg.FilesBrowse('Обзор')],
-            [sg.Button('Назад')]
+            [sg.InputText([oldfolder], disabled=True, size=(50,1), key='-FILESLB-'),
+            sg.Input(visible=False, enable_events=True, key='custompth'), sg.FolderBrowse('Обзор')],
+            [sg.Button('Назад'), sg.Button('Сбросить')]
 ]
 layout = [[sg.Column(layout1, key='main'), sg.Column(layout2, visible=False, key='setings')]
           ]
-# Create the window
 window = sg.Window('ServerName mod loader', layout, icon='logo.ico')
 
-# Display and interact with the Window using an Event Loo
 while True:
     event, values = window.read(timeout=10)
     # See if user wants to quit or window was closed
+    if event == 'custompth':
+        window['-FILESLB-'].Update(values['custompth'])
+        folder = values['custompth']+'/mods'
+        newconf()
+    if event == 'Сбросить':
+        try:
+            os.remove('config.py')
+            folder = 'C:/Users/' + username + '/AppData/Roaming/.minecraft/mods/'
+            window['-FILESLB-'].update('...')
+        except:
+            pass
     if event == 'Настройки':
         window['main'].update(visible=False)
         window['setings'].update(visible=True)

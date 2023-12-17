@@ -1,6 +1,5 @@
 import wget
 import os
-import shutil
 import sys
 import PySimpleGUI as sg
 import webbrowser
