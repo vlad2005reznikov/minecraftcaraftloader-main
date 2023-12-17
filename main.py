@@ -55,7 +55,7 @@ layout = [[sg.Column(layout1, key='main'), sg.Column(layout2, visible=False, key
 # Create the window
 window = sg.Window('ServerName mod loader', layout, icon='logo.ico')
 
-# Display and interact with the Window using an Event Loop
+# Display and interact with the Window using an Event Loo
 while True:
     event, values = window.read(timeout=10)
     # See if user wants to quit or window was closed
