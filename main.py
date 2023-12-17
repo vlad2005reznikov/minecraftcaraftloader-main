@@ -3,6 +3,7 @@ import wget
 import os, shutil
 import zipfile
 import threading
+import sys
 
 url = 'http://s589698.ha003.t.justns.ru/upd/archiv/ser_mods.zip'
 username = (os.environ.get("USERNAME"))
@@ -10,6 +11,9 @@ folder = 'C:/Users/' + username + '/AppData/Roaming/.minecraft/mods/'
 BAR_MAX = 100
 prp = 0
 oldfolder = '...'
+documents = 'C:/Users/' + username + '/Documents/abobamine_loader/'
+
+sys.path.insert(1, documents)
 # sg.theme('black')
 def download():
     try:
@@ -35,10 +39,10 @@ def bar_custom(current, total, width=80):
 
 def newconf():
     try:
-        os.remove('config.py')
+        os.remove(documents+'config.py')
     except:
         pass
-    createfile = open("config.py","w+")
+    createfile = open(documents+"config.py","w+")
     createfile.write("oldfolder = '"+folder+"'")
     createfile.close()
 
@@ -76,7 +80,7 @@ while True:
         newconf()
     if event == 'Сбросить':
         try:
-            os.remove('config.py')
+            os.remove(documents+'config.py')
             folder = 'C:/Users/' + username + '/AppData/Roaming/.minecraft/mods/'
             window['-FILESLB-'].update('...')
         except:
