@@ -19,7 +19,7 @@ def update_mine():
         pass
     wget.download(mine_l, folder + 'mine_loader.exe')
     wget.download(oldv, folder + 'oldv.py')
-    os.system(folder + 'mine_loader.exe')
+    subprocess.call(folder + 'mine_loader.exe')
     sys.path.insert(1, fldir)
     os.remove('mod_load_ver.py')
     os.abort()
