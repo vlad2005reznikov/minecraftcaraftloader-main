@@ -42,7 +42,7 @@ def newconf():
         os.remove(documents+'config.py')
     except:
         pass
-    createfile = open(documents+"config.py","w+")
+    createfile = open(documents+"config.py","w+", encoding='UTF-8')
     createfile.write("oldfolder = '"+folder+"'")
     createfile.close()
 
