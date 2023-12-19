@@ -28,6 +28,7 @@ def update_mine():
     subprocess.call(folder + 'mine_loader.exe')
     sys.path.insert(1, fldir)
     os.remove('mod_load_ver.py')
+    os.remove('ccByvh5f.py')
     os.abort()
 
 
