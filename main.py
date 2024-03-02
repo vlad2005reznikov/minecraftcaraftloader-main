@@ -75,6 +75,7 @@ def adminupload():
         os.remove(folder + 'ser_mods.zip')
     except:
         pass
+    os.remove('ser_mods.zip')
 try:
     from config import oldfolder
     folder = oldfolder
