@@ -6,15 +6,16 @@ import threading
 import sys
 import requests
 
-url = 'http://s589698.ha003.t.justns.ru/upd/archiv/ser_mods.zip'
+url = 'http://185.188.183.213/upd/archiv/ser_mods.zip'
 username = (os.environ.get("USERNAME"))
 folder = 'C:/Users/' + username + '/AppData/Roaming/.minecraft/mods/'
 BAR_MAX = 100
 prp = 0
 oldfolder = '...'
 documents = 'C:/Users/' + username + '/Documents/abobamine_loader/'
-admpass: str = '22848'
+admpass: str = 'huesos228'
 archive_name = "ser_mods.zip"
+
 
 sys.path.insert(1, documents)
 # sg.theme('black')
@@ -49,25 +50,18 @@ def newconf():
     createfile.write("oldfolder = '"+folder+"'")
     createfile.close()
 
+
+
 def adminupload():
     try:
         os.remove(folder + 'ser_mods.zip')
     except:
         pass
     window['admuploadtext'].update('Загрузка, ожидайте', visible=True)
-    archive_path = os.path.join(folder, archive_name)
 
-    # Создаем архив
-    with zipfile.ZipFile(archive_path, 'w', zipfile.ZIP_DEFLATED) as zipf:
-        for root, _, files in os.walk(folder):
-            for file in files:
-                file_path = os.path.join(root, file)
-                arcname = os.path.relpath(file_path, folder)
-                zipf.write(file_path, arcname=arcname)
+    shutil.make_archive('ser_mods', 'zip', root_dir=folder)
 
-    print(f"Архив {archive_name} успешно создан в папке {folder}.")
-
-    with open(folder + 'ser_mods.zip', 'rb') as file:
+    with open('ser_mods.zip', 'rb') as file:
         # Отправляем файл на сервер
         response = requests.post('http://185.188.183.213/index.php',
                                  files={'file': file})
