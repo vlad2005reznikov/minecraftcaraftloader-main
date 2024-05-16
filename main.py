@@ -6,7 +6,7 @@ import threading
 import sys
 import requests
 
-url = 'http://185.188.183.213/upd/archiv/ser_mods.zip'
+url = 'http://353b2824374f.vps.myjino.ru/upd/archiv/ser_mods.zip'
 username = (os.environ.get("USERNAME"))
 folder = 'C:/Users/' + username + '/AppData/Roaming/.minecraft/mods/'
 BAR_MAX = 100
@@ -20,6 +20,7 @@ archive_name = "ser_mods.zip"
 sys.path.insert(1, documents)
 # sg.theme('black')
 def download():
+    window['Download_key'].update(visible=False)
     try:
         shutil.rmtree(folder)
     except:
@@ -31,6 +32,7 @@ def download():
     z.close()
     os.remove(folder + 'ser_mods.zip')
     window['-OUTPUT-'].update("Загрузка завершена.")
+    window['Download_key'].update(visible=True)
 
 
 def bar_custom(current, total, width=80):
@@ -63,7 +65,7 @@ def adminupload():
 
     with open('ser_mods.zip', 'rb') as file:
         # Отправляем файл на сервер
-        response = requests.post('http://185.188.183.213/index.php',
+        response = requests.post('http://353b2824374f.vps.myjino.ru/index.php',
                                  files={'file': file})
 
     # Проверяем успешность запроса
@@ -87,7 +89,7 @@ layout1 = [[sg.Text("Mod loader", size=(40, 1))],
           [sg.Text(size=(40, 1), visible=False, key='-OUTPUT-')],
           [sg.ProgressBar(BAR_MAX, orientation='h', size=(20, 20), visible=False, key='pp')],
           [sg.Text(size=(40, 1), visible=False, key='procent')],
-           [sg.Button('Загрузить'), sg.Button('Настройки'), sg.Button('Выйти')],
+           [sg.Button('Загрузить', key='Download_key'), sg.Button('Настройки'), sg.Button('Выйти')],
           [sg.Column(
               [[sg.Text("developed by AbobaCorp", font='Default 7', justification='right'), sg.Image("abcorp.png")]],
               justification='right', element_justification='right')]]
@@ -95,6 +97,8 @@ layout2 =[
             [sg.Text("Выберите папку установки майнкрафта")],
             [sg.InputText([oldfolder], disabled=True, size=(50,1), key='-FILESLB-'),
             sg.Input(visible=False, enable_events=True, key='custompth'), sg.FolderBrowse('Обзор')],
+            [sg.Text("Если выше написанно ... значит путь стоит по умолчанию")],
+            [sg.Text("И его не нужно менять если майнкрафт установлен в стандартной папке")],
             [sg.Button('Назад'), sg.Button('Админ меню'), sg.Button('Сбросить')]
 ]
 
@@ -138,7 +142,7 @@ while True:
     if event == sg.WINDOW_CLOSED or event == 'Выйти':
         break
     # Output a message to the window
-    if event == 'Загрузить':
+    if event == 'Download_key':
         window['-OUTPUT-'].update(visible=True)
         window['-OUTPUT-'].update("Загрузка, подождите...")
         try:
