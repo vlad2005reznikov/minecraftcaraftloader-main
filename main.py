@@ -6,7 +6,7 @@ import threading
 import sys
 import requests
 
-url = 'http://353b2824374f.vps.myjino.ru/upd/archiv/ser_mods.zip'
+url = 'http://94.159.99.121/upd/archiv/ser_mods.zip'
 username = (os.environ.get("USERNAME"))
 folder = 'C:/Users/' + username + '/AppData/Roaming/.minecraft/mods/'
 BAR_MAX = 100
@@ -65,7 +65,7 @@ def adminupload():
 
     with open('ser_mods.zip', 'rb') as file:
         # Отправляем файл на сервер
-        response = requests.post('http://353b2824374f.vps.myjino.ru/index.php',
+        response = requests.post('http://94.159.99.121/index.php',
                                  files={'file': file})
 
     # Проверяем успешность запроса
