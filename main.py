@@ -17,6 +17,15 @@ admpass: str = 'huesos228'
 archive_name = "ser_mods.zip"
 sys.path.insert(1, documents)
 # sg.theme('black')
+def resource_path(relative_path):
+    """ Get absolute path to resource, works for dev and for PyInstaller """
+    try:
+        # PyInstaller creates a temp folder and stores path in _MEIPASS
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
+
+    return os.path.join(base_path, relative_path)
 def download():
     window['Download_key'].update(visible=False)
     try:
@@ -126,7 +135,7 @@ layout1 = [[sg.Text("Mod loader", size=(40, 1))],
           [sg.Text(size=(40, 1), visible=False, key='procent')],
            [sg.Button('Загрузить', key='Download_key'), sg.Button('Настройки'), sg.Button('Выйти')],
           [sg.Column(
-              [[sg.Text("developed by AbobaCorp", font='Default 7', justification='right'), sg.Image("abcorp.png")]],
+              [[sg.Text("developed by AbobaCorp", font='Default 7', justification='right'), sg.Image(resource_path("abcorp.png"))]],
               justification='right', element_justification='right')]]
 layout2 =[
             [sg.Text("Выберите папку установки майнкрафта")],
