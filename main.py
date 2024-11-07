@@ -6,7 +6,7 @@ import threading
 import sys
 import requests
 
-url = 'http://94.159.99.121/upd/archiv/ser_mods.zip'
+defurl = 'http://94.159.99.121/upd/archiv/'
 username = (os.environ.get("USERNAME"))
 folder = 'C:/Users/' + username + '/AppData/Roaming/.minecraft/mods/'
 BAR_MAX = 100
@@ -15,8 +15,6 @@ oldfolder = '...'
 documents = 'C:/Users/' + username + '/Documents/abobamine_loader/'
 admpass: str = 'huesos228'
 archive_name = "ser_mods.zip"
-
-
 sys.path.insert(1, documents)
 # sg.theme('black')
 def download():
@@ -26,13 +24,18 @@ def download():
     except:
         pass
     os.makedirs(folder)
+    selectver: str = values['-selectver-']
+    if selectver == '1.16.5':
+        url = defurl + 'ser_mods.zip'
+    elif selectver == '1.12.2':
+        url = defurl + 'ser_mods_1.12.2.zip'
     wget.download(url, folder + 'ser_mods.zip', bar=bar_custom)
     z = zipfile.ZipFile(folder + 'ser_mods.zip', 'r')
     z.extractall(folder)
     z.close()
     os.remove(folder + 'ser_mods.zip')
     window['-OUTPUT-'].update("Загрузка завершена.")
-    window['Download_key'].update(visible=True)
+
 
 
 def bar_custom(current, total, width=80):
@@ -52,7 +55,38 @@ def newconf():
     createfile.write("oldfolder = '"+folder+"'")
     createfile.close()
 
+def adminupload2():
+    try:
+        os.remove(folder + 'ser_mods_1.12.2.zip')
+    except:
+        pass
+    window['admuploadtext'].update('Загрузка, ожидайте', visible=True)
 
+    shutil.make_archive('ser_mods_1.12.2', 'zip', root_dir=folder)
+
+    with open('ser_mods_1.12.2.zip', 'rb') as file:
+        # Отправляем файл на сервер
+        response = requests.post('http://94.159.99.121/index.php',
+                                 files={'file': file})
+
+    # Проверяем успешность запроса
+    if response.status_code == 200:
+        window['admuploadtext'].update('Файл загружен', visible=True)
+    else:
+        window['admuploadtext'].update('Ошибка загрузки', visible=True)
+    try:
+        os.remove(folder + 'ser_mods_1.12.2.zip')
+    except:
+        pass
+    os.remove('ser_mods_1.12.2.zip')
+
+
+try:
+    from config import oldfolder
+
+    folder = oldfolder
+except:
+    pass
 
 def adminupload():
     try:
@@ -86,6 +120,7 @@ except:
 
 # Define the window's contents
 layout1 = [[sg.Text("Mod loader", size=(40, 1))],
+          [sg.Text("Выберите версию"), sg.Combo(['1.16.5', '1.12.2'], default_value='1.16.5', readonly=True, key='-selectver-')],
           [sg.Text(size=(40, 1), visible=False, key='-OUTPUT-')],
           [sg.ProgressBar(BAR_MAX, orientation='h', size=(20, 20), visible=False, key='pp')],
           [sg.Text(size=(40, 1), visible=False, key='procent')],
@@ -111,7 +146,8 @@ layout3 =[[sg.Text("Админ меню")],
 layout4 =[[sg.Text("Админ меню")],
 [sg.Text("Обновление файлов",size=(40, 1))],
 [sg.Text(key='admuploadtext',visible=False)],
-[sg.Button("Назад", key='backadm2'), sg.Button("Обновить файлы", key='updfile server')]
+[sg.Button("Назад", key='backadm2'), sg.Button("Обновить файлы 1.16.5", key='updfile server'),
+ sg.Button("Обновить файлы 1.12.2", key='updfile server1.12')]
 ]
 
 layout = [[sg.Column(layout1, key='main'), sg.Column(layout2, visible=False, key='setings'), sg.Column(layout3, visible=False, key='admin'),
@@ -168,6 +204,9 @@ while True:
         window['admin'].update(visible=True)
     if event == 'updfile server':
         th = threading.Thread(target=adminupload)
+        th.start()
+    if event == 'updfile server1.12':
+        th = threading.Thread(target=adminupload2)
         th.start()
 
 # Finish up by removing from the screen
