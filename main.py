@@ -6,7 +6,7 @@ import threading
 import sys
 import requests
 
-defurl = 'http://94.159.99.121/upd/archiv/'
+defurl = 'http://minecraft.abobacorp.xyz/upd/archiv/'
 username = (os.environ.get("USERNAME"))
 folder = 'C:/Users/' + username + '/AppData/Roaming/.minecraft/mods/'
 BAR_MAX = 100
@@ -75,7 +75,7 @@ def adminupload2():
 
     with open('ser_mods_1.12.2.zip', 'rb') as file:
         # Отправляем файл на сервер
-        response = requests.post('http://94.159.99.121/index.php',
+        response = requests.post('http://minecraft.abobacorp.xyz/index.php',
                                  files={'file': file})
 
     # Проверяем успешность запроса
@@ -108,7 +108,7 @@ def adminupload():
 
     with open('ser_mods.zip', 'rb') as file:
         # Отправляем файл на сервер
-        response = requests.post('http://94.159.99.121/index.php',
+        response = requests.post('http://minecraft.abobacorp.xyz/index.php',
                                  files={'file': file})
 
     # Проверяем успешность запроса
