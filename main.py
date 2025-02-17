@@ -15,6 +15,7 @@ oldfolder = '...'
 documents = 'C:/Users/' + username + '/Documents/abobamine_loader/'
 admpass: str = 'huesos228'
 archive_name = "ser_mods.zip"
+ser_mods_v = ''
 sys.path.insert(1, documents)
 # sg.theme('black')
 def resource_path(relative_path):
@@ -38,6 +39,8 @@ def download():
         url = defurl + 'ser_mods.zip'
     elif selectver == '1.12.2':
         url = defurl + 'ser_mods_1.12.2.zip'
+    elif selectver == '1.18.2':
+        url = defurl + 'ser_mods_1.18.2.zip'
     wget.download(url, folder + 'ser_mods.zip', bar=bar_custom)
     z = zipfile.ZipFile(folder + 'ser_mods.zip', 'r')
     z.extractall(folder)
@@ -64,6 +67,7 @@ def newconf():
     createfile.write("oldfolder = '"+folder+"'")
     createfile.close()
 
+"""
 def adminupload2():
     try:
         os.remove(folder + 'ser_mods_1.12.2.zip')
@@ -75,7 +79,7 @@ def adminupload2():
 
     with open('ser_mods_1.12.2.zip', 'rb') as file:
         # Отправляем файл на сервер
-        response = requests.post('http://minecraft.abobacorp.xyz/index.php',
+        response = requests.post('http://94.159.99.121/index.php',
                                  files={'file': file})
 
     # Проверяем успешность запроса
@@ -88,27 +92,32 @@ def adminupload2():
     except:
         pass
     os.remove('ser_mods_1.12.2.zip')
+"""
 
-
-try:
-    from config import oldfolder
-
-    folder = oldfolder
-except:
-    pass
 
 def adminupload():
+    ser_mods_v: str = values['updfile_ver']
+    print(ser_mods_v)
+    if ser_mods_v == '1.16':
+        ser_mods_v_1 = 'ser_mods.zip'
+        ser_mods_v_2 = 'ser_mods'
+    elif ser_mods_v == '1.12':
+        ser_mods_v_1 = 'ser_mods_1.12.2.zip'
+        ser_mods_v_2 = 'ser_mods_1.12.2'
+    elif ser_mods_v == '1.18':
+        ser_mods_v_1 = 'ser_mods_1.18.2.zip'
+        ser_mods_v_2 = 'ser_mods_1.18.2'
     try:
-        os.remove(folder + 'ser_mods.zip')
+        os.remove(folder + ser_mods_v_1)
     except:
         pass
     window['admuploadtext'].update('Загрузка, ожидайте', visible=True)
 
-    shutil.make_archive('ser_mods', 'zip', root_dir=folder)
+    shutil.make_archive(ser_mods_v_2, 'zip', root_dir=folder)
 
-    with open('ser_mods.zip', 'rb') as file:
+    with open(ser_mods_v_1, 'rb') as file:
         # Отправляем файл на сервер
-        response = requests.post('http://minecraft.abobacorp.xyz/index.php',
+        response = requests.post('http://94.159.99.121/index.php',
                                  files={'file': file})
 
     # Проверяем успешность запроса
@@ -117,10 +126,13 @@ def adminupload():
     else:
         window['admuploadtext'].update('Ошибка загрузки', visible=True)
     try:
-        os.remove(folder + 'ser_mods.zip')
+        os.remove(folder + ser_mods_v_1)
     except:
         pass
-    os.remove('ser_mods.zip')
+    os.remove(ser_mods_v_1)
+
+
+
 try:
     from config import oldfolder
     folder = oldfolder
@@ -129,7 +141,7 @@ except:
 
 # Define the window's contents
 layout1 = [[sg.Text("Mod loader", size=(40, 1))],
-          [sg.Text("Выберите версию"), sg.Combo(['1.16.5', '1.12.2'], default_value='1.16.5', readonly=True, key='-selectver-')],
+          [sg.Text("Выберите версию"), sg.Combo(['1.16.5', '1.12.2', '1.18.2'], default_value='1.16.5', readonly=True, key='-selectver-')],
           [sg.Text(size=(40, 1), visible=False, key='-OUTPUT-')],
           [sg.ProgressBar(BAR_MAX, orientation='h', size=(20, 20), visible=False, key='pp')],
           [sg.Text(size=(40, 1), visible=False, key='procent')],
@@ -147,7 +159,7 @@ layout2 =[
 ]
 
 layout3 =[[sg.Text("Админ меню")],
-    [sg.Text("Введите пароль"),sg.InputText(key='adminpassbyuserwindow'), ],
+    [sg.Text("Введите пароль"),sg.InputText(key='adminpassbyuserwindow', password_char='*')],
     [sg.Text('Пароль не верный',key='pass incorrect' ,visible=False)],
     [sg.Button("Назад", key='back adm'), sg.Button("Ок", key='pass confirmation')]
 ]
@@ -155,8 +167,10 @@ layout3 =[[sg.Text("Админ меню")],
 layout4 =[[sg.Text("Админ меню")],
 [sg.Text("Обновление файлов",size=(40, 1))],
 [sg.Text(key='admuploadtext',visible=False)],
-[sg.Button("Назад", key='backadm2'), sg.Button("Обновить файлы 1.16.5", key='updfile server'),
- sg.Button("Обновить файлы 1.12.2", key='updfile server1.12')]
+[sg.Combo(['1.16', '1.12', '1.18'], default_value='1.16', readonly=True, key='updfile_ver')],
+[sg.Button("Назад", key='backadm2'),
+ sg.Button("Обновить файлы", key='updfile server')
+ ]
 ]
 
 layout = [[sg.Column(layout1, key='main'), sg.Column(layout2, visible=False, key='setings'), sg.Column(layout3, visible=False, key='admin'),
@@ -214,10 +228,6 @@ while True:
     if event == 'updfile server':
         th = threading.Thread(target=adminupload)
         th.start()
-    if event == 'updfile server1.12':
-        th = threading.Thread(target=adminupload2)
-        th.start()
-
 # Finish up by removing from the screen
 
 window.close()
