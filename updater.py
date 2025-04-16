@@ -6,13 +6,25 @@ import webbrowser
 import subprocess
 import threading
 from jabagif import gif
+import requests
+import importlib.util
 
 username = (os.environ.get("USERNAME"))
 folder = 'C:/Users/' + username + '/Documents/abobamine_loader/'
 fldir = os.path.abspath(__file__)
 auto_url = 'https://pastebin.com/raw/ccByvh5f'
+headers = {'User-Agent': 'Mozilla/5.0'}
 lo = 0
 
+def resource_path(relative_path):
+    """ Get absolute path to resource, works for dev and for PyInstaller """
+    try:
+        # PyInstaller creates a temp folder and stores path in _MEIPASS
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
+
+    return os.path.join(base_path, relative_path)
 def update_mine():
     try:
         os.remove(folder + 'mine_loader.exe')
@@ -27,8 +39,8 @@ def update_mine():
     lo = 1
     subprocess.call(folder + 'mine_loader.exe')
     sys.path.insert(1, fldir)
-    os.remove('mod_load_ver.py')
-    os.remove('ccByvh5f.py')
+    os.remove(resource_path('mod_load_ver.py'))
+    os.remove(resource_path('ccByvh5f.py'))
     os.abort()
 
 
@@ -56,16 +68,20 @@ def error1():
         if event == sg.WIN_CLOSED or event == 'Ok':
             window.close()
             os.abort()
-        webbrowser.open_new('https://vk.com/v.reznikov2005')
+        webbrowser.open_new('https://t.me/Vlad_Reznikov')
         window.close()
         os.abort()
 
 
 def get_url():
     try:
-        wget.download(auto_url, 'ccByvh5f.py')
+        file_path = resource_path("ccByvh5f.py")
+        response = requests.get(auto_url, headers=headers)
+        with open(file_path, 'w', encoding='utf-8') as f:
+            f.write(response.text)
     except:
         error1()
+
 
 
 try:
@@ -77,16 +93,31 @@ try:
 except:
     pass
 get_url()
-from ccByvh5f import upd_m_url
+
+module_path = resource_path("ccByvh5f.py")
+spec = importlib.util.spec_from_file_location("ccByvh5f", module_path)
+ccByvh5f = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(ccByvh5f)
+upd_m_url = ccByvh5f.upd_m_url
 
 newv = upd_m_url + '/mod_load_ver.py'
 mine_l = upd_m_url + '/mine_loader.exe'
 oldv = upd_m_url + '/oldv.py'
 try:
-    wget.download(newv, 'mod_load_ver.py')
+    file_path = resource_path("mod_load_ver.py")
+    wget.download(newv, file_path)
 except:
     error1()
-from mod_load_ver import v
+
+
+module_path = resource_path("mod_load_ver.py")
+spec = importlib.util.spec_from_file_location("mod_load_ver", module_path)
+mod_load_ver = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(mod_load_ver)
+v = mod_load_ver.v
+
+
+
 
 try:
     os.makedirs(folder)
@@ -96,6 +127,7 @@ except:
 try:
     sys.path.insert(1, folder)
     from oldv import vold
+
 except:
     update_mine()
 if v > vold:
@@ -105,5 +137,5 @@ else:
 
 subprocess.call(folder + 'mine_loader.exe')
 sys.path.insert(1, fldir)
-os.remove('mod_load_ver.py')
-os.remove('ccByvh5f.py')
+os.remove(resource_path('mod_load_ver.py'))
+os.remove(resource_path('ccByvh5f.py'))
