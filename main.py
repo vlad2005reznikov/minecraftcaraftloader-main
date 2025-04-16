@@ -41,6 +41,8 @@ def download():
         url = defurl + 'ser_mods_1.12.2.zip'
     elif selectver == '1.18.2':
         url = defurl + 'ser_mods_1.18.2.zip'
+    elif selectver == '1.20.1':
+        url = defurl + 'ser_mods_1.20.1.zip'
     wget.download(url, folder + 'ser_mods.zip', bar=bar_custom)
     z = zipfile.ZipFile(folder + 'ser_mods.zip', 'r')
     z.extractall(folder)
@@ -67,34 +69,6 @@ def newconf():
     createfile.write("oldfolder = '"+folder+"'")
     createfile.close()
 
-"""
-def adminupload2():
-    try:
-        os.remove(folder + 'ser_mods_1.12.2.zip')
-    except:
-        pass
-    window['admuploadtext'].update('Загрузка, ожидайте', visible=True)
-
-    shutil.make_archive('ser_mods_1.12.2', 'zip', root_dir=folder)
-
-    with open('ser_mods_1.12.2.zip', 'rb') as file:
-        # Отправляем файл на сервер
-        response = requests.post('http://94.159.99.121/index.php',
-                                 files={'file': file})
-
-    # Проверяем успешность запроса
-    if response.status_code == 200:
-        window['admuploadtext'].update('Файл загружен', visible=True)
-    else:
-        window['admuploadtext'].update('Ошибка загрузки', visible=True)
-    try:
-        os.remove(folder + 'ser_mods_1.12.2.zip')
-    except:
-        pass
-    os.remove('ser_mods_1.12.2.zip')
-"""
-
-
 def adminupload():
     ser_mods_v: str = values['updfile_ver']
     print(ser_mods_v)
@@ -107,6 +81,9 @@ def adminupload():
     elif ser_mods_v == '1.18':
         ser_mods_v_1 = 'ser_mods_1.18.2.zip'
         ser_mods_v_2 = 'ser_mods_1.18.2'
+    elif ser_mods_v == '1.20':
+        ser_mods_v_1 = 'ser_mods_1.20.1.zip'
+        ser_mods_v_2 = 'ser_mods_1.20.1'
     try:
         os.remove(folder + ser_mods_v_1)
     except:
@@ -141,7 +118,7 @@ except:
 
 # Define the window's contents
 layout1 = [[sg.Text("Mod loader", size=(40, 1))],
-          [sg.Text("Выберите версию"), sg.Combo(['1.16.5', '1.12.2', '1.18.2'], default_value='1.16.5', readonly=True, key='-selectver-')],
+          [sg.Text("Выберите версию"), sg.Combo(['1.16.5', '1.12.2', '1.18.2', '1.20.1'], default_value='1.16.5', readonly=True, key='-selectver-')],
           [sg.Text(size=(40, 1), visible=False, key='-OUTPUT-')],
           [sg.ProgressBar(BAR_MAX, orientation='h', size=(20, 20), visible=False, key='pp')],
           [sg.Text(size=(40, 1), visible=False, key='procent')],
@@ -167,7 +144,7 @@ layout3 =[[sg.Text("Админ меню")],
 layout4 =[[sg.Text("Админ меню")],
 [sg.Text("Обновление файлов",size=(40, 1))],
 [sg.Text(key='admuploadtext',visible=False)],
-[sg.Combo(['1.16', '1.12', '1.18'], default_value='1.16', readonly=True, key='updfile_ver')],
+[sg.Combo(['1.16', '1.12', '1.18', '1.20'], default_value='1.16', readonly=True, key='updfile_ver')],
 [sg.Button("Назад", key='backadm2'),
  sg.Button("Обновить файлы", key='updfile server')
  ]
